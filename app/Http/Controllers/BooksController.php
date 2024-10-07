@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Books;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class BooksController extends Controller
 {
@@ -17,10 +18,22 @@ class BooksController extends Controller
     }
 
     public function createBook(Request $request){
-        $book = Books::create([
-            'name' => $request->input('name')
-        ]);
-        return response()->json(['success' => 'true']);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required'
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(['error' => true,'message' => 'El campo no puede ir vacío']);
+            }
+
+            $book = Books::create([
+                'name' => $request->input('name')
+            ]);
+
+            return response()->json(['success' => 'true']);
     
     }
 
@@ -35,11 +48,22 @@ class BooksController extends Controller
     }
 
     public function editBook(Request $request){
-        $book = Books::find($request->id);
-        $book->update([
-            'name' => $request->name
-        ]);
-        return response()->json(['success' => 'true']);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required'
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(['error' => true,'message' => 'El campo no puede ir vacío']);
+            }
+
+            $book = Books::find($request->id);
+            $book->update([
+                'name' => $request->name
+            ]);
+            return response()->json(['success' => 'true']);
     }
 
 
