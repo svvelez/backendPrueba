@@ -38,6 +38,7 @@ class BooksController extends Controller
     }
 
     public function deleteBook(Request $request){
+        Log::info($request);
         $book = Books::find($request->id)->delete();
         return response()->json(['success' => 'true']);
     }
